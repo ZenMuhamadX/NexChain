@@ -17,7 +17,7 @@ export const verifyChainIntegrity = async (): Promise<boolean> => {
 		verifyStruct(block)
 		verifyPow(block)
 		verifyHashLength(block.block.header.hash)
-		verifyBlockHash(block)
+		verifyBlockHash(block, block.block.header.nonce, block.block.header.hash)
 		currentHeight++
 	}
 }

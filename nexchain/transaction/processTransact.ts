@@ -5,6 +5,7 @@ import { processReciever } from './reciever/processReciever'
 import { removeMemPool } from 'nexchain/storage/mempool/removeMempool'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
 import _ from 'lodash'
+import { saveHistoryAddress } from './saveHistoryAddress'
 
 export const processTransact = (txData: txInterface[]): void => {
 	if (txData.length === 0) {
@@ -25,6 +26,7 @@ export const processTransact = (txData: txInterface[]): void => {
 		const fee = tx.fee!
 		processSender(senderAddress, amount, fee)
 		processReciever(recieverAddress, amount)
+		saveHistoryAddress(tx)
 		removeMemPool(tx.txHash!)
 	})
 }

@@ -2,15 +2,16 @@ import { createHash } from 'crypto'
 import { structBlockReadyToHash } from 'nexchain/lib/block/convertBlock'
 import { Block } from 'nexchain/model/block/block'
 
-export const verifyBlockHash = (currentBlock: Block) => {
-	const blockReadyToHash = structBlockReadyToHash(currentBlock)
-	const nonce = currentBlock.block.header.nonce
-	const nonceBuffer = Buffer.from(nonce.toString())
-	const combineBlock = Buffer.concat([blockReadyToHash, nonceBuffer])
-	// Compute SHA-256 hash
-	const hash = createHash('sha256').update(combineBlock).digest('hex')
-	if (hash !== currentBlock.block.header.hash) {
-		throw new Error('Block hash is invalid')
-	}
-	return hash === currentBlock.block.header.hash
+// Metode verifikasi hash
+export const verifyBlockHash = (
+	block: Block,
+	nonce: number,
+	hash: string,
+): boolean => {
+	const BufferData: Buffer = structBlockReadyToHash(block)
+	const input = Buffer.concat([BufferData, Buffer.from(nonce.toString())])
+	const computedHash = createHash('sha256').update(input).digest('hex')
+
+	// Periksa apakah hash yang dihitung cocok dan memenuhi kriteria kesulitan
+	return computedHash === hash
 }
