@@ -4,10 +4,10 @@ import { processPubKey } from './utils/processPubKey'
 import { addChecksum } from './utils/addChecksum'
 import bs58 from 'bs58'
 import { saveMainWallet } from './utils/saveWallet'
-import { getKeyPair } from 'nexchain/lib/hash/getKeyPair'
 import { putBalance } from './balance/putBalance'
 import { loggingErr } from 'logging/errorLog'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
+import { loadKeyPair } from './utils/loadKeyPair'
 
 // Creates a new wallet address and saves it
 export const createWalletAddress = () => {
@@ -17,7 +17,7 @@ export const createWalletAddress = () => {
 		const initialTimesTransaction = 0
 
 		// Retrieve the public key
-		const publicKey = getKeyPair().publicKey
+		const publicKey = loadKeyPair().publicKey
 
 		// Generate the wallet address from the public key
 		const address = processPubKey(publicKey)

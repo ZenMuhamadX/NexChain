@@ -2,22 +2,17 @@ import 'dotenv/config'
 import crypto from 'crypto'
 import path from 'path'
 import fs from 'fs'
-import { encrypt } from '../secure/encrypt/encrypt'
-import { getKeyPair } from 'nexchain/lib/hash/getKeyPair'
 import { structWalletToSave } from 'nexchain/model/interface/walletStructinf'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
 import msg from 'msgpack-lite'
+import { loadKeyPair } from './loadKeyPair'
 
 // Saves the main wallet data to a file
 export const saveMainWallet = async (
-	wallet: string,
-	privateKey: string = getKeyPair().privateKey,
+	address: string,
+	privateKey: string = loadKeyPair().privateKey,
 ): Promise<boolean> => {
 	try {
-		const password = process.env.WALLET_PASSWORD as string
-		// Encrypt the private key
-		const encryptedPrivateKey = encrypt(privateKey, password)
-
 		// Determine the file name and path
 		const dirPath = path.join(__dirname, '../../../myWallet')
 		const filePath = path.join(dirPath, 'MainWallet.bin')
@@ -30,10 +25,9 @@ export const saveMainWallet = async (
 		// Prepare the data to be saved
 		const structToSave: structWalletToSave = {
 			data: {
-				address: wallet,
-				publicKey: getKeyPair().publicKey,
-				encryptPrivateKey: encryptedPrivateKey as string,
-				decryptPrivateKey: privateKey,
+				address,
+				publicKey: loadKeyPair().publicKey,
+				privateKey,
 			},
 			metadata: {
 				timestamp: generateTimestampz(),

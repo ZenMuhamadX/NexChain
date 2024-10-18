@@ -40,7 +40,7 @@ export const miningBlock = async (address: string): Promise<void> => {
 			loggingErr({
 				error: 'Block is not valid',
 				context: 'miningBlock',
-				hint: 'Prev Block is not valid',
+				hint: '',
 				time: generateTimestampz(),
 				warning: null,
 				stack: new Error().stack,

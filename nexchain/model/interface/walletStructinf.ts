@@ -5,8 +5,7 @@ export interface structWalletToSave {
 	data: {
 		address: string // The wallet address
 		publicKey: string // The public key associated with the wallet
-		encryptPrivateKey: string // The encrypted private key for the wallet
-		decryptPrivateKey?: string // The decrypted private key (optional)
+		privateKey: string // The encrypted private key for the wallet
 	}
 	metadata: {
 		timestamp: number // The timestamp when the wallet data was created or updated

@@ -7,7 +7,7 @@ import { saveBlock } from './storage/block/saveBlock'
 import { loggingErr } from '../logging/errorLog'
 import { successLog } from '../logging/succesLog'
 import { createSignature } from './lib/block/createSignature'
-import { proofOfWork } from './miner/POW'
+import { proofOfWork } from './miner/Pow'
 import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
 import { txInterface } from './model/interface/memPool.inf'
@@ -19,8 +19,8 @@ import { calculateTotalFees } from './transaction/utils/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
 import { calculateMerkleRoot } from './transaction/utils/createMerkleRoot'
 import { getNetworkId } from '../Network/utils/getNetId'
-import { getKeyPair } from './lib/hash/getKeyPair'
 import { getCurrentBlock } from './block/query/direct/block/getCurrentBlock'
+import { loadKeyPair } from './account/utils/loadKeyPair'
 
 // Manages the blockchain and its operations
 export class BlockChains {
@@ -81,7 +81,7 @@ export class BlockChains {
 	): Promise<Block> {
 		const latestBlock: Block = await getCurrentBlock()
 		const currentHeight = latestBlock.block.height
-		const { privateKey } = getKeyPair()
+		const { privateKey } = loadKeyPair()
 
 		if (!latestBlock) {
 			throw new Error('Latest block is undefined.')

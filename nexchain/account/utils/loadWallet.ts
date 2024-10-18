@@ -1,7 +1,6 @@
 import path from 'path'
 import fs from 'node:fs'
 import msg from 'msgpack-lite'
-import { decrypt } from '../secure/decrypt/decrypt'
 import { structWalletToSave } from 'nexchain/model/interface/walletStructinf'
 
 export const loadWallet = (): structWalletToSave | undefined => {
@@ -17,24 +16,15 @@ export const loadWallet = (): structWalletToSave | undefined => {
 
 		// Read file if it exists
 		const fileData = fs.readFileSync(filePath)
-		const walletData = msg.decode(fileData)
+		const walletData: structWalletToSave = msg.decode(fileData)
 
 		// Check if wallet data is valid
-		if (!walletData || !walletData.data || !walletData.data.encryptPrivateKey) {
+		if (!walletData || !walletData.data) {
 			console.error('Invalid wallet data.')
 			return undefined
 		}
 
-		const rawPrivateKey = walletData.data.encryptPrivateKey
-
-		// Decrypt the private key
-		const decryptedPrivateKey = decrypt(
-			rawPrivateKey,
-			process.env.WALLET_PASSWORD as string,
-		)
-		walletData.data.decryptPrivateKey = decryptedPrivateKey
-
-		return walletData as structWalletToSave
+		return walletData
 	} catch (error) {
 		console.error('Error loading wallet:', error)
 		return undefined

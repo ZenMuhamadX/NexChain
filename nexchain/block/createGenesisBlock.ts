@@ -1,7 +1,7 @@
 /** @format */
 
 import { loggingErr } from '../../logging/errorLog'
-import { proofOfWork } from '../miner/POW'
+import { proofOfWork } from '../miner/Pow'
 import { Block } from '../model/block/block'
 import { createSignature } from '../lib/block/createSignature'
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
@@ -11,8 +11,8 @@ import { calculateTotalFees } from 'nexchain/transaction/utils/totalFees'
 import { saveBlock } from 'nexchain/storage/block/saveBlock'
 import { getNetworkId } from 'Network/utils/getNetId'
 import { getBlockByHeight } from './query/direct/block/getBlockByHeight'
-import { getKeyPair } from 'nexchain/lib/hash/getKeyPair'
 import { countHashDifficulty } from 'nexchain/lib/hash/countHashDifficulty'
+import { loadKeyPair } from 'nexchain/account/utils/loadKeyPair'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block = await getBlockByHeight(0)
@@ -21,7 +21,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		return undefined
 	}
 	try {
-		const { privateKey } = getKeyPair()
+		const { privateKey } = loadKeyPair()
 		const genesisBlock = new Block({
 			header: {
 				difficulty: 0,
@@ -45,10 +45,10 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			coinbaseTransaction: {
 				amount: 5000000,
 				reward: 5000000,
-				to: 'NxC12YWoAES6hAj8mHuJA13CCvbSLD3jtDGys',
+				to: 'NxC16UUyJeUMzrNygmf1zcCcZxjqgKCJwJtfd',
 			},
 			validator: {
-				rewardAddress: 'NxC12YWoAES6hAj8mHuJA13CCvbSLD3jtDGys',
+				rewardAddress: 'NxC16UUyJeUMzrNygmf1zcCcZxjqgKCJwJtfd',
 				stakeAmount: 0,
 				validationTime: generateTimestampz(),
 			},
@@ -73,12 +73,12 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		genesisBlock.block.header.hash = validHash.hash
 		genesisBlock.block.header.nonce = validHash.nonce
 		genesisBlock.block.size = calculateSize(genesisBlock.block).KB
-		saveBlock(genesisBlock)
-		putBalance('NxC12YWoAES6hAj8mHuJA13CCvbSLD3jtDGys', {
-			address: 'NxC12YWoAES6hAj8mHuJA13CCvbSLD3jtDGys',
+		putBalance('NxC16UUyJeUMzrNygmf1zcCcZxjqgKCJwJtfd', {
+			address: 'NxC16UUyJeUMzrNygmf1zcCcZxjqgKCJwJtfd',
 			balance: genesisBlock.block.coinbaseTransaction.reward,
 			timesTransaction: 0,
 		})
+		saveBlock(genesisBlock)
 		return genesisBlock
 	} catch (error) {
 		loggingErr({

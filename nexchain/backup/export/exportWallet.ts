@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { binaryTostring } from 'nexchain/lib/bin/binaryToString'
-import { getKeyPair } from 'nexchain/lib/hash/getKeyPair'
+import { loadKeyPair } from 'nexchain/account/utils/loadKeyPair'
 
 const dirPath = path.join(__dirname, '../../../MyBackup')
 const filePath = path.join(dirPath, 'walletBackup.json')
@@ -11,7 +11,7 @@ export const exportWallet = () => {
 		fs.mkdirSync(dirPath)
 	}
 	console.log('Exporting wallet...')
-	const { mnemonic } = getKeyPair()
+	const { mnemonic } = loadKeyPair()
 	const stringMnemonic = binaryTostring(mnemonic)
 	const walletDataToExport = {
 		mnemonic: stringMnemonic,

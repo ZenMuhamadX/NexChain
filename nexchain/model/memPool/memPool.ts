@@ -2,8 +2,8 @@ import { transactionValidator } from 'interface/txValidator/txValidator.v'
 import { saveMempool } from 'nexchain/storage/mempool/saveMemPool'
 import { loadMempool } from 'nexchain/storage/mempool/loadMempool'
 import { txInterface } from '../interface/memPool.inf'
-import { getKeyPair } from 'nexchain/lib/hash/getKeyPair'
 import { saveTxHistory } from 'nexchain/transaction/saveTxHistory'
+import { loadKeyPair } from 'nexchain/account/utils/loadKeyPair'
 
 export class MemPool {
 	constructor() {
@@ -28,7 +28,7 @@ export class MemPool {
 		transaction: txInterface,
 	): Promise<boolean | txInterface> {
 		// Validate the transaction
-		const { publicKey } = getKeyPair()
+		const { publicKey } = loadKeyPair()
 		const isValidTx = await transactionValidator(transaction, publicKey)
 		if (!isValidTx) return false
 
